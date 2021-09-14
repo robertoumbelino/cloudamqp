@@ -1,0 +1,23 @@
+{
+  "name": "cloudamqp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "producer:station": "tsnd --respawn --transpile-only producer/station.ts",
+    "consumer:station": "tsnd --respawn --transpile-only consumer/station.ts",
+    "consumer:customer-saver": "tsnd --respawn --transpile-only consumer/customer-saver.ts",
+    "consumer:crm": "tsnd --respawn --transpile-only consumer/crm.ts"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.8.2",
+    "@types/node": "^16.9.1",
+    "ts-node": "^10.2.1",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "amqplib": "^0.8.0",
+    "dotenv": "^10.0.0"
+  }
+}
