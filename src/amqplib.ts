@@ -1,5 +1,7 @@
 import { connect as connectAMQP, ConsumeMessage } from 'amqplib'
 
+const ATTEMPTS = 3
+
 /**
  * Json data.
  */
@@ -53,7 +55,12 @@ export const connect = async (
 
         channel.ack(msg)
       } catch {
-        channel.reject(msg, true)
+        /**
+         * Retry.
+         */
+        if (msg.fields.deliveryTag <= ATTEMPTS) return channel.reject(msg)
+
+        channel.ack(msg)
       }
     }
 
