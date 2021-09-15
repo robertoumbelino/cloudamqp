@@ -27,7 +27,9 @@ export const connect = async (
   channel.prefetch(1)
 
   companies.forEach(async companyToken => {
-    const q = await channel.assertQueue(`${service}:${companyToken}`)
+    const q = await channel.assertQueue(`${service}:${companyToken}`, {
+      maxPriority: 5
+    })
 
     exchanges.forEach(({ exchange, type }) => {
       console.log(companyToken, exchange)

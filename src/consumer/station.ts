@@ -1,4 +1,6 @@
 import 'dotenv/config'
+
+import { sleep } from '../utils'
 import { connect } from '../amqplib'
 
 const SERVICE = 'station'
@@ -8,8 +10,13 @@ const exchanges = [
   {
     exchange: 'products',
     type: 'headers',
-    fn: (companyToken: string, msg: any) =>
-      console.log('produto', companyToken, msg)
+    fn: async (companyToken: string, msg: any) => {
+      console.log('Processando produto', companyToken, msg)
+
+      await sleep(5 * 1000)
+
+      console.log('Finalizado produto', companyToken, msg)
+    }
   },
   {
     exchange: 'customers',
@@ -17,7 +24,7 @@ const exchanges = [
     fn: async (companyToken: string, msg: any) => {
       console.log('Processando cliente', companyToken, msg)
 
-      await new Promise(resolve => setTimeout(resolve, 10 * 1000))
+      await sleep(5 * 1000)
 
       console.log('Finalizado cliente', companyToken, msg)
     }
