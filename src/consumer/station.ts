@@ -14,8 +14,13 @@ const exchanges = [
   {
     exchange: 'customers',
     type: 'headers',
-    fn: (companyToken: string, msg: any) =>
-      console.log('cliente', companyToken, msg)
+    fn: async (companyToken: string, msg: any) => {
+      console.log('Processando cliente', companyToken, msg)
+
+      await new Promise(resolve => setTimeout(resolve, 10 * 1000))
+
+      console.log('Finalizado cliente', companyToken, msg)
+    }
   }
 ]
 

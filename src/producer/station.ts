@@ -7,19 +7,30 @@ const run = async () => {
     const client = await connect(process.env.AMQP_URL)
     const channel = await client.createChannel()
 
-    /**
-     * Payload.
-     */
     const exchange = 'customers'
     const headers = { company: 'hmaistoken' }
-    const data = { name: 'Cliente 57' }
 
-    const options = { headers }
+    Array(3)
+      .fill('')
+      .forEach((_, index) => {
+        /**
+         * Payload.
+         */
 
-    /**
-     * Publish.
-     */
-    channel.publish(exchange, '', Buffer.from(JSON.stringify(data)), options)
+        const data = { name: `Cliente ${index + 1}` }
+
+        const options = { headers }
+
+        /**
+         * Publish.
+         */
+        channel.publish(
+          exchange,
+          '',
+          Buffer.from(JSON.stringify(data)),
+          options
+        )
+      })
   } catch ({ message }) {
     console.error(message)
   }

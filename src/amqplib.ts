@@ -1,9 +1,17 @@
-import * as amqplib from 'amqplib'
+import { connect as connectAMQP, ConsumeMessage } from 'amqplib'
 
+/**
+ * Json data.
+ */
+type Json = Record<string, unknown>
+
+/**
+ * Exchange type.
+ */
 type Exchange = {
   exchange: string
   type: string
-  fn: (companyToken: string, msg: any) => void
+  fn: (companyToken: string, msg: Json | Json[]) => Promise<void> | void
 }
 
 /**
@@ -14,8 +22,9 @@ export const connect = async (
   service: string,
   exchanges: Exchange[]
 ) => {
-  const client = await amqplib.connect(process.env.AMQP_URL)
+  const client = await connectAMQP(process.env.AMQP_URL)
   const channel = await client.createChannel()
+  channel.prefetch(1)
 
   companies.forEach(async companyToken => {
     const q = await channel.assertQueue(`${service}:${companyToken}`)
@@ -26,18 +35,26 @@ export const connect = async (
       channel.bindQueue(q.queue, exchange, '', { company: companyToken })
     })
 
-    const onReceive = (msg: any) => {
-      const data = JSON.parse(msg.content.toString())
+    const onReceive = async (msg: ConsumeMessage | null) => {
+      if (msg === null) return
 
-      const receive = exchanges.find(
-        ({ exchange }) => exchange === msg.fields.exchange
-      )
+      try {
+        const data = JSON.parse(msg.content.toString())
 
-      if (!receive) return
+        const receive = exchanges.find(
+          ({ exchange }) => exchange === msg.fields.exchange
+        )
 
-      receive.fn(companyToken, data)
+        if (!receive) return
+
+        await receive.fn(companyToken, data)
+
+        channel.ack(msg)
+      } catch {
+        channel.reject(msg, true)
+      }
     }
 
-    channel.consume(q.queue, onReceive, { noAck: true })
+    channel.consume(q.queue, onReceive, { noAck: false })
   })
 }
