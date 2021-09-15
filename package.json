@@ -4,10 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "producer:station": "tsnd --respawn --transpile-only producer/station.ts",
-    "consumer:station": "tsnd --respawn --transpile-only consumer/station.ts",
-    "consumer:customer-saver": "tsnd --respawn --transpile-only consumer/customer-saver.ts",
-    "consumer:crm": "tsnd --respawn --transpile-only consumer/crm.ts"
+    "producer:station": "tsnd --respawn --transpile-only src/producer/station.ts",
+    "consumer:station": "tsnd --respawn --transpile-only src/consumer/station.ts",
+    "consumer:customer-saver": "tsnd --respawn --transpile-only src/consumer/customer-saver.ts",
+    "consumer:crm": "tsnd --respawn --transpile-only src/consumer/crm.ts"
   },
   "devDependencies": {
     "@types/amqplib": "^0.8.2",
