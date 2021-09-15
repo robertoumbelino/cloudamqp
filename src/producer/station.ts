@@ -1,25 +1,25 @@
 import 'dotenv/config'
 import { connect } from 'amqplib'
 
-const urlConnection = process.env.AMQP_URL
-
 // Publish
 const run = async () => {
   try {
-    const client = await connect(urlConnection)
+    const client = await connect(process.env.AMQP_URL)
     const channel = await client.createChannel()
+
+    /**
+     * Payload.
+     */
+    const exchange = 'customers'
+    const headers = { company: 'hmaistoken' }
+    const data = { name: 'Cliente 57' }
+
+    const options = { headers }
 
     /**
      * Publish.
      */
-    channel.publish(
-      'customers',
-      '',
-      Buffer.from(JSON.stringify({ name: 'Cliente 57' })),
-      {
-        headers: { company: 'hmaistoken' }
-      }
-    )
+    channel.publish(exchange, '', Buffer.from(JSON.stringify(data)), options)
   } catch ({ message }) {
     console.error(message)
   }
