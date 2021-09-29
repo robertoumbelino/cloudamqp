@@ -33,23 +33,23 @@ export const connect = async (
       maxPriority: 5
     })
 
-    exchanges.forEach(({ exchange, type }) => {
-      console.log(companyToken, exchange)
-      channel.assertExchange(exchange, type, { durable: false })
-      channel.bindQueue(q.queue, exchange, '', { company: companyToken })
-    })
-
     const onReceive = async (msg: ConsumeMessage | null) => {
       if (msg === null) return
 
       try {
         const data = JSON.parse(msg.content.toString())
 
+        console.log('Processando', data)
+
         const receive = exchanges.find(
           ({ exchange }) => exchange === msg.fields.exchange
         )
 
-        if (!receive) return
+        if (!receive) {
+          console.error(`Unknown exchange: ${msg.fields.exchange}`)
+          channel.ack(msg)
+          return
+        }
 
         await receive.fn(companyToken, data)
 
@@ -64,6 +64,15 @@ export const connect = async (
       }
     }
 
-    channel.consume(q.queue, onReceive, { noAck: false })
+    exchanges.forEach(({ exchange, type }) => {
+      console.log(companyToken, exchange)
+      channel.assertExchange(exchange, type, { durable: false })
+      channel.bindQueue(q.queue, exchange, '', {
+        company: companyToken,
+        exchange
+      })
+
+      channel.consume(q.queue, onReceive, { noAck: false })
+    })
   })
 }

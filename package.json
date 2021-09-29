@@ -7,7 +7,8 @@
     "producer:station": "tsnd --respawn --transpile-only src/producer/station.ts",
     "consumer:station": "tsnd --respawn --transpile-only src/consumer/station.ts",
     "consumer:customer-saver": "tsnd --respawn --transpile-only src/consumer/customer-saver.ts",
-    "consumer:crm": "tsnd --respawn --transpile-only src/consumer/crm.ts"
+    "consumer:product": "tsnd --respawn --transpile-only src/consumer/product.ts",
+    "consumer:variant": "tsnd --respawn --transpile-only src/consumer/variant.ts"
   },
   "devDependencies": {
     "@types/amqplib": "^0.8.2",

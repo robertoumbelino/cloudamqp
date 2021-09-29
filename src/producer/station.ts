@@ -7,8 +7,8 @@ const run = async () => {
     const client = await connect(process.env.AMQP_URL)
     const channel = await client.createChannel()
 
-    const exchange = 'customers'
-    const headers = { company: 'hmaistoken' }
+    const exchange = 'received-product'
+    const headers = { company: 'hmaistoken', exchange }
 
     Array(3)
       .fill('')
@@ -17,7 +17,7 @@ const run = async () => {
          * Payload.
          */
 
-        const data = { name: `Cliente ${index + 1}` }
+        const data = { name: `Produto pai ${index + 1}` }
 
         const options = { headers, priority: 2 }
 
@@ -32,49 +32,49 @@ const run = async () => {
         )
       })
 
-    Array(3)
-      .fill('')
-      .forEach((_, index) => {
-        /**
-         * Payload.
-         */
+    // Array(3)
+    //   .fill('')
+    //   .forEach((_, index) => {
+    //     /**
+    //      * Payload.
+    //      */
 
-        const data = { name: `Produto ${index + 1}` }
+    //     const data = { name: `Produto ${index + 1}` }
 
-        const options = { headers, priority: 1 }
+    //     const options = { headers, priority: 1 }
 
-        /**
-         * Publish.
-         */
-        channel.publish(
-          'products',
-          '',
-          Buffer.from(JSON.stringify(data)),
-          options
-        )
-      })
+    //     /**
+    //      * Publish.
+    //      */
+    //     channel.publish(
+    //       'products',
+    //       '',
+    //       Buffer.from(JSON.stringify(data)),
+    //       options
+    //     )
+    //   })
 
-    Array(3)
-      .fill('')
-      .forEach((_, index) => {
-        /**
-         * Payload.
-         */
+    // Array(3)
+    //   .fill('')
+    //   .forEach((_, index) => {
+    //     /**
+    //      * Payload.
+    //      */
 
-        const data = { name: `Cliente ${index + 4}` }
+    //     const data = { name: `Cliente ${index + 4}` }
 
-        const options = { headers, priority: 2 }
+    //     const options = { headers, priority: 2 }
 
-        /**
-         * Publish.
-         */
-        channel.publish(
-          exchange,
-          '',
-          Buffer.from(JSON.stringify(data)),
-          options
-        )
-      })
+    //     /**
+    //      * Publish.
+    //      */
+    //     channel.publish(
+    //       exchange,
+    //       '',
+    //       Buffer.from(JSON.stringify(data)),
+    //       options
+    //     )
+    //   })
   } catch ({ message }) {
     console.error(message)
   }
