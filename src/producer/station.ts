@@ -1,5 +1,15 @@
 import 'dotenv/config'
-import { connect } from 'amqplib'
+import { Channel, Connection, connect } from 'amqplib'
+
+/**
+ * AMQP client.
+ */
+export let client: Connection
+
+/**
+ * Connected channel.
+ */
+export let channel: Channel
 
 // Publish
 const run = async () => {
@@ -7,10 +17,10 @@ const run = async () => {
     const client = await connect(process.env.AMQP_URL)
     const channel = await client.createChannel()
 
-    const exchange = 'received-product'
-    const headers = { company: 'hmaistoken', exchange }
+    const exchange = 'test-products'
+    const headers = { companyToken: 'hmaistest' }
 
-    Array(3)
+    Array(10)
       .fill('')
       .forEach((_, index) => {
         /**
@@ -19,7 +29,7 @@ const run = async () => {
 
         const data = { name: `Produto pai ${index + 1}` }
 
-        const options = { headers, priority: 2 }
+        const options = { headers }
 
         /**
          * Publish.
