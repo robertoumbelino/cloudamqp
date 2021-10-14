@@ -11,6 +11,7 @@ const exchanges = [
       console.log('Processando produto', msg.name)
 
       await sleep(2000)
+
       if (msg.name === 'Produto pai 2') {
         throw new Error('Erro no produto 2')
       }

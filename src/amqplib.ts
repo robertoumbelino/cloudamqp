@@ -21,7 +21,7 @@ type Exchange = {
 }
 
 const ATTEMPTS = 3
-const DELAY_MESSAGE = 2000
+const DELAY_MESSAGE = 5000
 const queueName = 'test-products'
 
 /**
@@ -195,7 +195,7 @@ export const connect = async (exchanges: Exchange[]) => {
        * Log.
        */
       console.log(
-        `Foi realizado ${ATTEMPTS} no recurso ${
+        `Foi realizado ${ATTEMPTS} tentativas no recurso ${
           msg.fields.exchange
         } tentativas sem sucesso, será removido da fila o payload: ${JSON.stringify(
           msg
